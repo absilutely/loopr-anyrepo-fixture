@@ -4,6 +4,7 @@ import fs from 'node:fs';
 
 const port = Number(process.env.PORT || 3000);
 const required = ['FIXTURE_API_KEY', 'FIXTURE_WEBHOOK_SECRET', 'DATABASE_URL'];
+const pkg = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url)));
 
 function reach(url) {
   return new Promise((resolve) => {
@@ -28,6 +29,10 @@ if (process.argv[1] && process.argv[1].endsWith('server.js')) {
     if (req.url === '/health') {
       res.setHeader('content-type', 'application/json');
       return res.end(JSON.stringify(await health()));
+    }
+    if (req.url === '/version') {
+      res.setHeader('content-type', 'application/json');
+      return res.end(JSON.stringify({ version: pkg.version }));
     }
     res.setHeader('content-type', 'text/html');
     res.end(fs.readFileSync(new URL('./web/index.html', import.meta.url)));
