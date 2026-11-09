@@ -1,9 +1,15 @@
 import http from 'node:http';
 import net from 'node:net';
 import fs from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 const port = Number(process.env.PORT || 3000);
 const required = ['FIXTURE_API_KEY', 'FIXTURE_WEBHOOK_SECRET', 'DATABASE_URL'];
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'));
 
 function reach(url) {
   return new Promise((resolve) => {
@@ -23,11 +29,19 @@ export async function health() {
   return { ok: missing.length === 0 && db === 'ok', missing, db, redis };
 }
 
+export function version() {
+  return { version: packageJson.version, name: packageJson.name };
+}
+
 if (process.argv[1] && process.argv[1].endsWith('server.js')) {
   http.createServer(async (req, res) => {
     if (req.url === '/health') {
       res.setHeader('content-type', 'application/json');
       return res.end(JSON.stringify(await health()));
+    }
+    if (req.url === '/version') {
+      res.setHeader('content-type', 'application/json');
+      return res.end(JSON.stringify(version()));
     }
     res.setHeader('content-type', 'text/html');
     res.end(fs.readFileSync(new URL('./web/index.html', import.meta.url)));
