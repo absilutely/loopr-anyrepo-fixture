@@ -8,3 +8,5 @@ A made-up app used only to test Loopr (an AI agent app) on "any GitHub repo". No
 3. `npm install`
 4. `npm run dev` serves the app on http://localhost:3000 (`/health` shows the database and keys).
 5. `npm test`
+
+<!-- merge-checklist proof 202611112136 -->
