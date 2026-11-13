@@ -9,10 +9,5 @@
     "test": "node --test",
     "lint:web": "node scripts/lint-web.mjs"
   },
-  "engines": {
-    "node": ">=22"
-  },
-  "dependencies": {
-    "@loopr-test/secret-pkg": "1.0.0"
-  }
+  "engines": { "node": ">=22" }
 }
